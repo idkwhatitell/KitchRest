@@ -63,10 +63,10 @@ const App: React.FC = () => {
           </Breadcrumb>
           <div className="site-layout-background" style={{ padding: 5, minHeight: 360 }}>
             <DataTable/>
-            Bill is a cat.
+            
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Kaan Cömert ©2022 Created for KitchRest</Footer>
+        <Footer style={{ textAlign: 'center' }}> Kaan Cömert Created For KitchRest ©{new Date().getFullYear()}</Footer>
       </Layout>
     </Layout>
   );

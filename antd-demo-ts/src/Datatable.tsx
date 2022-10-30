@@ -3,18 +3,18 @@ import React, { useState } from 'react';
 
 interface Item {
   key: string;
-  name: string;
+  isim: string;
   age: number;
   address: string;
 }
 
 const originData: Item[] = [];
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 40; i++) {
   originData.push({
     key: i.toString(),
-    name: `Edrward ${i}`,
+    isim: `Kaan ${i}`,
     age: 32,
-    address: `London Park no. ${i}`,
+    address: `Yağmur caddesi  ${i}`,
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -26,6 +26,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number;
   children: React.ReactNode;
 }
+
 
 const EditableCell: React.FC<EditableCellProps> = ({
   editing,
@@ -48,7 +49,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           rules={[
             {
               required: true,
-              message: `Please Input ${title}!`,
+              message: `Lütfen ${title} Giriniz`,
             },
           ]}
         >
@@ -69,7 +70,7 @@ const App: React.FC = () => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ name: '', age: '', address: '', ...record });
+    form.setFieldsValue({ isim: '', age: '', address: '', ...record });
     setEditingKey(record.key);
   };
 
@@ -103,8 +104,8 @@ const App: React.FC = () => {
 
   const columns = [
     {
-      title: 'name',
-      dataIndex: 'name',
+      title: 'isim',
+      dataIndex: 'isim',
       width: '25%',
       editable: true,
     },
