@@ -2,22 +2,22 @@
   "users": [{
       "id": 1,
       "name": "Satheesh",
-      "age": "Sat@mail.com",
+      "age": 15,
       "address": "South street"
   }, {
       "id": 2,
       "name": "John",
-      "age": "john@mail.com",
+      "age": 16,
       "address": "North street"
   }, {
       "id": 3,
       "name": "Robert",
-      "age": "robert@mail.com",
+      "age": 17,
       "address": "East street"
   }, {
       "id": 4,
       "name": "Mani",
-      "age": "mani@mail.com",
+      "age": 18,
       "address": "West street"
   }]
 }

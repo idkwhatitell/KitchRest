@@ -1,22 +1,25 @@
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Item {
-  key: string;
+  id: number;
   isim: string;
   age: number;
   address: string;
+  // key: string
 }
 
-const originData: Item[] = [];
-for (let i = 0; i < 40; i++) {
-  originData.push({
-    key: i.toString(),
-    isim: `Kaan ${i}`,
-    age: 32,
-    address: `Yağmur caddesi  ${i}`,
-  });
-}
+//http://ant.design/components/table
+
+// const originData: Item[] = [];
+// for (let i = 0; i < 40; i++) {
+//   originData.push({
+//     key: i.toString(),
+//     isim: `Kaan ${i}`,
+//     age: 32,
+//     address: `Yağmur caddesi  ${i}`,
+//    });
+//}
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -49,7 +52,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           rules={[
             {
               required: true,
-              message: `Lütfen ${title} Giriniz`,
+              message: `Please Input ${title}!`,
             },
           ]}
         >
@@ -62,28 +65,57 @@ const EditableCell: React.FC<EditableCellProps> = ({
   );
 };
 
+
+
 const App: React.FC = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState('');
+  const [data, setData] = useState<Item[]>({} as Item[]);
+  const [editingKey, setEditingKey] = useState<number>(-1);
 
-  const isEditing = (record: Item) => record.key === editingKey;
+  const isEditing = (record: Item) => record.id  === editingKey;
 
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
+  
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const users : Item[] = await fetchUsers();
+      setData(users);
+    };
+
+    getUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const res = await fetch('http://localhost:4000/users');
+    const users = await res.json();
+    console.log("users:",users);
+
+    return users;
+  };
+
+  
+  const edit = (record: Partial<Item>) => {
+    console.log("record:",record);
     form.setFieldsValue({ isim: '', age: '', address: '', ...record });
-    setEditingKey(record.key);
+    setEditingKey(record.id||-1);
+  };
+
+  const remove = (record: Partial<Item>) => {
+    console.log("record:",record);
+    form.setFieldsValue({ isim: '', age: '', address: '', ...record });
+    setEditingKey(record.id||-1);
   };
 
   const cancel = () => {
-    setEditingKey('');
+    setEditingKey(-1);
   };
 
-  const save = async (key: React.Key) => {
+  const save = async (id: React.Key) => {
     try {
       const row = (await form.validateFields()) as Item;
 
       const newData = [...data];
-      const index = newData.findIndex(item => key === item.key);
+      const index = newData.findIndex(item => id === item.id);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -91,11 +123,11 @@ const App: React.FC = () => {
           ...row,
         });
         setData(newData);
-        setEditingKey('');
+        setEditingKey(-1);
       } else {
         newData.push(row);
         setData(newData);
-        setEditingKey('');
+        setEditingKey(-1);
       }
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
@@ -104,8 +136,8 @@ const App: React.FC = () => {
 
   const columns = [
     {
-      title: 'isim',
-      dataIndex: 'isim',
+      title: 'name',
+      dataIndex: 'name',
       width: '25%',
       editable: true,
     },
@@ -126,9 +158,10 @@ const App: React.FC = () => {
       dataIndex: 'operation',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
+        console.log("record:",record);
         return editable ? (
           <span>
-            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
               Save
             </Typography.Link>
             <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
@@ -136,9 +169,14 @@ const App: React.FC = () => {
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+          <span>
+          <Typography.Link disabled={editingKey !== -1} onClick={() => edit(record)}>
             Edit
+          </Typography.Link>{' '}
+            <Typography.Link disabled={editingKey !== -1} onClick={() => remove(record)}>
+            Delete
           </Typography.Link>
+          </span>
         );
       },
     },
@@ -160,24 +198,32 @@ const App: React.FC = () => {
     };
   });
 
+  console.log("data:",data);
+
   return (
-    <Form form={form} component={false}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        bordered
-        dataSource={data}
-        columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
-      />
-    </Form>
-  );
-};
+    
+      <div>
+        {( data && data.length>0) && <>
+        <Form form={form} component={false}>
+        <Table
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={data}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+          />
+        </Form>
+        </>}
+     </div>)
+    
+  
+}
 
 export default App;
