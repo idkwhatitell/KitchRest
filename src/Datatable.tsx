@@ -6,20 +6,10 @@ interface Item {
   isim: string;
   age: number;
   address: string;
-  // key: string
+  
 }
 
-//http://ant.design/components/table
 
-// const originData: Item[] = [];
-// for (let i = 0; i < 40; i++) {
-//   originData.push({
-//     key: i.toString(),
-//     isim: `Kaan ${i}`,
-//     age: 32,
-//     address: `Yağmur caddesi  ${i}`,
-//    });
-//}
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -99,6 +89,7 @@ const App: React.FC = () => {
     form.setFieldsValue({ isim: '', age: '', address: '', ...record });
     setEditingKey(record.id||-1);
   };
+  
 
   const remove = (record: Partial<Item>) => {
     console.log("record:",record);
