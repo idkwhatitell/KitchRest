@@ -20,12 +20,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+
+    - name: GitHub Action for npx
     - uses: mikeal/npx@1.0.0
+    - run: npx create-react-app antd-demo-ts --template typescript
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3, JS-DevTools/npm-publish@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npx create-react-app antd-demo-ts --template typescript
+    
     - run: cd antd-demo-ts
     - run: npm start
