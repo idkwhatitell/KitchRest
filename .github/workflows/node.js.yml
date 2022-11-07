@@ -26,6 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm create react-app antd-demo-ts --template typescript 
+    - run: npx create react-app antd-demo-ts --template typescript 
     - run: cd antd-demo-ts
-    - run: npm
+    - run: npm start
