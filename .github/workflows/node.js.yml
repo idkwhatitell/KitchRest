@@ -25,7 +25,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npx'
+        cache: 'npm'
     - run: npx create-react-app antd-demo-ts --template typescript
     - run: cd antd-demo-ts
     - run: npm start
