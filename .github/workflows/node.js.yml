@@ -28,4 +28,4 @@ jobs:
         cache: 'npm'
     - run: npm create react-app antd-demo-ts --template typescript 
     - run: cd antd-demo-ts
-    - run: npm start 
+    - run: npm
